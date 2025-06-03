@@ -998,3 +998,5 @@ insert into product (id, name, price) values (997, 'Cake - Mini Potato Pancake',
 insert into product (id, name, price) values (998, 'Shichimi Togarashi Peppeers', 94.45);
 insert into product (id, name, price) values (999, 'Tomatoes - Grape', 20.17);
 insert into product (id, name, price) values (1000, 'Longos - Penne With Pesto', 72.79);
+
+insert into product_price_configuration(id, min_quantity, discount_percentage, product_id) values (1, 10, 10, 1);

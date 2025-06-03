@@ -17,50 +17,86 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-    @ExtendWith(MockitoExtension.class)
-    class NonFunctionalOrderServiceTest {
+@ExtendWith(MockitoExtension.class)
+class NonFunctionalOrderServiceTest {
 
-        @Mock
-        private OrderRepository orderRepository;
-        @Mock
-        private ProductRepository productRepository;
-        @InjectMocks
-        private NonFunctionalOrderService orderService;
+    @Mock
+    private OrderRepository orderRepository;
+    @Mock
+    private ProductRepository productRepository;
+    @InjectMocks
+    private NonFunctionalOrderService orderService;
 
-        @Test
-        void addItem() {
-            // Arrange
-            var purchaseOrderId = 1L;
-            var productId = 1L;
-            var quantity = 11;
-            var productPrice = new BigDecimal("3.44");
-            var calculatedPrice = new BigDecimal("3.096"); // 10% discount
+    @Test
+    void addItemWithOutDiscount() {
+        // Arrange
+        var purchaseOrderId = 1L;
+        var productId = 1L;
+        var quantity = 9;
+        var productPrice = new BigDecimal("3.44");
 
-            var product = new ProductRecord();
-            product.setId(productId);
-            product.setPrice(productPrice);
+        var product = new ProductRecord();
+        product.setId(productId);
+        product.setPrice(productPrice);
 
-            var priceConfig = new ProductPriceConfigurationRecord();
-            priceConfig.setProductId(productId);
-            priceConfig.setMinQuantity(10);
-            priceConfig.setDiscountPercentage(10);
+        var priceConfig = new ProductPriceConfigurationRecord();
+        priceConfig.setProductId(productId);
+        priceConfig.setMinQuantity(10);
+        priceConfig.setDiscountPercentage(10);
 
-            var expectedOrderItem = new OrderItemRecord();
-            expectedOrderItem.setId(1L);
-            expectedOrderItem.setPurchaseOrderId(purchaseOrderId);
-            expectedOrderItem.setProductId(productId);
-            expectedOrderItem.setQuantity(quantity);
-            expectedOrderItem.setPrice(calculatedPrice);
+        var expectedOrderItem = new OrderItemRecord();
+        expectedOrderItem.setId(1L);
+        expectedOrderItem.setPurchaseOrderId(purchaseOrderId);
+        expectedOrderItem.setProductId(productId);
+        expectedOrderItem.setQuantity(quantity);
+        expectedOrderItem.setPrice(productPrice);
 
-            when(orderRepository.purchaseOrderExists(purchaseOrderId)).thenReturn(true);
-            when(productRepository.findProduct(productId)).thenReturn(Optional.of(product));
-            when(productRepository.findProductPriceConfiguration(productId)).thenReturn(Optional.of(priceConfig));
-            when(orderRepository.addItem(eq(purchaseOrderId), eq(productId), eq(quantity), any(BigDecimal.class)))
-                    .thenReturn(expectedOrderItem);
+        when(orderRepository.purchaseOrderExists(purchaseOrderId)).thenReturn(true);
+        when(productRepository.findProduct(productId)).thenReturn(Optional.of(product));
+        when(productRepository.findProductPriceConfiguration(productId)).thenReturn(Optional.of(priceConfig));
+        when(orderRepository.addItem(eq(purchaseOrderId), eq(productId), eq(quantity), any(BigDecimal.class)))
+                .thenReturn(expectedOrderItem);
 
-            var orderItem = orderService.addItem(purchaseOrderId, productId, quantity);
+        var orderItem = orderService.addItem(purchaseOrderId, productId, quantity);
 
-            assertThat(orderItem).isNotNull();
-            assertThat(orderItem.getPrice()).isEqualTo(calculatedPrice);
-        }
+        assertThat(orderItem).isNotNull();
+        assertThat(orderItem.getPrice()).isEqualTo(productPrice);
     }
+
+    @Test
+    void addItemWithDiscount() {
+        // Arrange
+        var purchaseOrderId = 1L;
+        var productId = 1L;
+        var quantity = 11;
+        var productPrice = new BigDecimal("3.44");
+        var calculatedPrice = new BigDecimal("3.096"); // 10% discount
+
+        var product = new ProductRecord();
+        product.setId(productId);
+        product.setPrice(productPrice);
+
+        var priceConfig = new ProductPriceConfigurationRecord();
+        priceConfig.setProductId(productId);
+        priceConfig.setMinQuantity(10);
+        priceConfig.setDiscountPercentage(10);
+
+        var expectedOrderItem = new OrderItemRecord();
+        expectedOrderItem.setId(1L);
+        expectedOrderItem.setPurchaseOrderId(purchaseOrderId);
+        expectedOrderItem.setProductId(productId);
+        expectedOrderItem.setQuantity(quantity);
+        expectedOrderItem.setPrice(calculatedPrice);
+
+        when(orderRepository.purchaseOrderExists(purchaseOrderId)).thenReturn(true);
+        when(productRepository.findProduct(productId)).thenReturn(Optional.of(product));
+        when(productRepository.findProductPriceConfiguration(productId)).thenReturn(Optional.of(priceConfig));
+        when(orderRepository.addItem(eq(purchaseOrderId), eq(productId), eq(quantity), any(BigDecimal.class)))
+                .thenReturn(expectedOrderItem);
+
+        var orderItem = orderService.addItem(purchaseOrderId, productId, quantity);
+
+        assertThat(orderItem).isNotNull();
+        assertThat(orderItem.getPrice()).isEqualTo(calculatedPrice);
+    }
+}
