@@ -1,10 +1,16 @@
 package ch.martinelli.demo.nomocks.command;
 
-import org.springframework.stereotype.Component;
+import jakarta.annotation.Nonnull;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
-@Component
+@RequestMapping("commands/order")
+@RestController
 class OrderCommandHandler {
 
     private final OrderService orderService;
@@ -13,7 +19,8 @@ class OrderCommandHandler {
         this.orderService = orderService;
     }
 
-    Optional<?> handle(OrderCommand orderCommand) {
+    @PostMapping
+    Optional<?> handle(@RequestBody @Nonnull @Valid OrderCommand orderCommand) {
         switch (orderCommand) {
             case OrderCommand.CreateOrderCommand(long customerId) -> {
                 var purchaseOrder = orderService.createOrder(customerId);

@@ -1,0 +1,33 @@
+### Get Orders
+GET http://localhost:8080/orders?firstName=%25&lastName=%25&offset=0&limit=9999
+
+### Create Order
+POST http://localhost:8080/commands/order
+Content-Type: application/json
+
+{
+  "@type": "CreateOrderCommand",
+  "customerId": 1
+}
+
+### Add item
+POST http://localhost:8080/commands/order
+Content-Type: application/json
+
+{
+  "@type": "AddOrderItemCommand",
+  "orderId": 100000,
+  "productId": 1,
+  "quantity": 1
+}
+
+### Update quantity
+POST http://localhost:8080/commands/order
+Content-Type: application/json
+
+{
+  "@type": "UpdateQuantityCommand",
+  "orderItemId": 100000,
+  "quantity": 2
+}
+
