@@ -35,8 +35,7 @@ public class NonFunctionalOrderService {
 
         var productPriceConfiguration = productRepository.findProductPriceConfiguration(productId);
         var calculatedPrice = productPriceConfiguration
-                .map(priceConfiguration ->
-                {
+                .map(priceConfiguration -> {
                     if (quantity >= priceConfiguration.getMinQuantity()
                             && priceConfiguration.getDiscountPercentage() != null) {
                         var discountFactor = BigDecimal.ONE
