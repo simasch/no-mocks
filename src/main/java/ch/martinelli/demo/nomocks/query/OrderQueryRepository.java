@@ -11,11 +11,11 @@ import static org.jooq.Records.mapping;
 import static org.jooq.impl.DSL.*;
 
 @Repository
-class OrderRepository {
+class OrderQueryRepository {
 
     private final DSLContext ctx;
 
-    OrderRepository(DSLContext ctx) {
+    OrderQueryRepository(DSLContext ctx) {
         this.ctx = ctx;
     }
 
@@ -34,7 +34,7 @@ class OrderRepository {
                                         ORDER_ITEM.QUANTITY,
                                         row(ORDER_ITEM.product().ID,
                                                 ORDER_ITEM.product().NAME,
-                                                ORDER_ITEM.product().PRICE
+                                                ORDER_ITEM.PRICE
                                         ).mapping(Product::new))
                                         .from(ORDER_ITEM)
                                         .where(ORDER_ITEM.PURCHASE_ORDER_ID.eq(PURCHASE_ORDER.ID))

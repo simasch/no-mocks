@@ -19,6 +19,17 @@ CREATE TABLE product
     price DECIMAL(5, 2)
 );
 
+CREATE SEQUENCE product_price_configuration_seq START WITH 100000 INCREMENT BY 50;
+
+CREATE TABLE product_price_configuration
+(
+    id                  BIGINT NOT NULL DEFAULT nextval('product_price_configuration_seq') PRIMARY KEY,
+    min_quantity        INT,
+    discount_percentage INT,
+
+    product_id          BIGINT NOT NULL REFERENCES product (id)
+);
+
 CREATE SEQUENCE purchase_order_seq START WITH 100000 INCREMENT BY 50;
 
 CREATE TABLE purchase_order

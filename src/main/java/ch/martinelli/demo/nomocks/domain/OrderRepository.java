@@ -1,25 +1,24 @@
-package ch.martinelli.demo.nomocks.command;
+package ch.martinelli.demo.nomocks.domain;
 
 import ch.martinelli.demo.nomocks.db.tables.records.OrderItemRecord;
 import ch.martinelli.demo.nomocks.db.tables.records.PurchaseOrderRecord;
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static ch.martinelli.demo.nomocks.db.tables.Customer.CUSTOMER;
 import static ch.martinelli.demo.nomocks.db.tables.OrderItem.ORDER_ITEM;
-import static ch.martinelli.demo.nomocks.db.tables.Product.PRODUCT;
 import static ch.martinelli.demo.nomocks.db.tables.PurchaseOrder.PURCHASE_ORDER;
 
-@Service
-class OrderService {
+@Repository
+class OrderRepository {
 
     private final DSLContext ctx;
-    private final PriceCalculator priceCalculator = new PriceCalculator();
 
-    OrderService(DSLContext ctx) {
+    OrderRepository(DSLContext ctx) {
         this.ctx = ctx;
     }
 
@@ -41,19 +40,7 @@ class OrderService {
     }
 
     @Transactional
-    OrderItemRecord addItem(long purchaseOrderId, long productId, int quantity) {
-        if (!ctx.fetchExists(ctx.selectFrom(PURCHASE_ORDER).where(PURCHASE_ORDER.ID.eq(purchaseOrderId)))) {
-            throw new IllegalArgumentException("Purchase order does not exist");
-        }
-
-        var product = ctx
-                .selectFrom(PRODUCT)
-                .where(PRODUCT.ID.eq(productId))
-                .fetchOptional()
-                .orElseThrow(() -> new IllegalArgumentException("Product does not exist"));
-
-        var calculatedPrice = priceCalculator.calculatePrice(product.getPrice(), quantity);
-
+    OrderItemRecord addItem(long purchaseOrderId, long productId, int quantity, BigDecimal calculatedPrice) {
         var orderItem = ctx.newRecord(ORDER_ITEM);
         orderItem.setPurchaseOrderId(purchaseOrderId);
         orderItem.setProductId(productId);
@@ -75,4 +62,10 @@ class OrderService {
             throw new IllegalArgumentException("Order item does not exist");
         }
     }
+
+    @Transactional(readOnly = true)
+    public boolean purchaseOrderExists(long purchaseOrderId) {
+        return ctx.fetchExists(ctx.selectFrom(PURCHASE_ORDER).where(PURCHASE_ORDER.ID.eq(purchaseOrderId)));
+    }
+
 }

@@ -1,4 +1,4 @@
-package ch.martinelli.demo.nomocks.command;
+package ch.martinelli.demo.nomocks.domain;
 
 import ch.martinelli.demo.nomocks.TestcontainersConfiguration;
 import org.junit.jupiter.api.Test;

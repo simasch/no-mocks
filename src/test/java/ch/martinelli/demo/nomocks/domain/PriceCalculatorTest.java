@@ -1,4 +1,4 @@
-package ch.martinelli.demo.nomocks.command;
+package ch.martinelli.demo.nomocks.domain;
 
 import org.junit.jupiter.api.Test;
 
@@ -12,14 +12,14 @@ class PriceCalculatorTest {
 
     @Test
     void calculatePriceWithoutDiscount() {
-        BigDecimal price = priceCalculator.calculatePrice(new BigDecimal("3.44"), 10);
+        var price = priceCalculator.calculatePrice(new BigDecimal("3.44"), 9, 10, 10);
 
         assertThat(price).isEqualTo(new BigDecimal("3.44"));
     }
 
     @Test
     void calculatePriceWithDiscount() {
-        BigDecimal price = priceCalculator.calculatePrice(new BigDecimal("3.44"), 11);
+        var price = priceCalculator.calculatePrice(new BigDecimal("3.44"), 11, 10, 10);
 
         assertThat(price).isEqualTo(new BigDecimal("3.096"));
     }

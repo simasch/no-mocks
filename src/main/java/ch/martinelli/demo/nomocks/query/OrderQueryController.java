@@ -10,14 +10,14 @@ import java.util.List;
 @RestController
 class OrderQueryController {
 
-    private final OrderRepository orderRepository;
+    private final OrderQueryRepository orderQueryRepository;
 
-    OrderQueryController(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
+    OrderQueryController(OrderQueryRepository orderQueryRepository) {
+        this.orderQueryRepository = orderQueryRepository;
     }
 
     @GetMapping
     List<PurchaseOrder> getCustomersWithOrders(FindOrders query) {
-        return orderRepository.findOrders(query.firstName(), query.lastName(), query.offset(), query.limit());
+        return orderQueryRepository.findOrders(query.firstName(), query.lastName(), query.offset(), query.limit());
     }
 }

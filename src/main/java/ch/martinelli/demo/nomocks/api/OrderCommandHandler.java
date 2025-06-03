@@ -1,5 +1,6 @@
-package ch.martinelli.demo.nomocks.command;
+package ch.martinelli.demo.nomocks.api;
 
+import ch.martinelli.demo.nomocks.domain.OrderService;
 import jakarta.annotation.Nonnull;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;

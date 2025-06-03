@@ -1,4 +1,4 @@
-package ch.martinelli.demo.nomocks.command;
+package ch.martinelli.demo.nomocks.api;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
