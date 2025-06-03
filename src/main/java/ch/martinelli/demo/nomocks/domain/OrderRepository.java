@@ -6,7 +6,6 @@ import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static ch.martinelli.demo.nomocks.db.tables.Customer.CUSTOMER;
@@ -40,12 +39,8 @@ class OrderRepository {
     }
 
     @Transactional
-    OrderItemRecord addItem(long purchaseOrderId, long productId, int quantity, BigDecimal calculatedPrice) {
-        var orderItem = ctx.newRecord(ORDER_ITEM);
-        orderItem.setPurchaseOrderId(purchaseOrderId);
-        orderItem.setProductId(productId);
-        orderItem.setQuantity(quantity);
-        orderItem.setPrice(calculatedPrice);
+    OrderItemRecord addItem(OrderItemRecord orderItem) {
+        ctx.attach(orderItem);
         orderItem.store();
 
         return orderItem;

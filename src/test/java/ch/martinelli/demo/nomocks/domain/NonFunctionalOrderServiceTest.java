@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -29,33 +28,20 @@ class NonFunctionalOrderServiceTest {
 
     @Test
     void addItemWithOutDiscount() {
-        // Arrange
         var purchaseOrderId = 1L;
         var productId = 1L;
         var quantity = 9;
         var productPrice = new BigDecimal("3.44");
 
-        var product = new ProductRecord();
-        product.setId(productId);
-        product.setPrice(productPrice);
-
-        var priceConfig = new ProductPriceConfigurationRecord();
-        priceConfig.setProductId(productId);
-        priceConfig.setMinQuantity(10);
-        priceConfig.setDiscountPercentage(10);
-
-        var expectedOrderItem = new OrderItemRecord();
-        expectedOrderItem.setId(1L);
-        expectedOrderItem.setPurchaseOrderId(purchaseOrderId);
-        expectedOrderItem.setProductId(productId);
-        expectedOrderItem.setQuantity(quantity);
-        expectedOrderItem.setPrice(productPrice);
+        var product = new ProductRecord(productId, "", productPrice);
+        var priceConfig = new ProductPriceConfigurationRecord(1L, 10, 10, productId);
+        var orderItemToCreate = new OrderItemRecord(null, quantity, productPrice, purchaseOrderId, productId);
+        var expectedOrderItem = new OrderItemRecord(1L, quantity, productPrice, purchaseOrderId, productId);
 
         when(orderRepository.purchaseOrderExists(purchaseOrderId)).thenReturn(true);
         when(productRepository.findProduct(productId)).thenReturn(Optional.of(product));
         when(productRepository.findProductPriceConfiguration(productId)).thenReturn(Optional.of(priceConfig));
-        when(orderRepository.addItem(eq(purchaseOrderId), eq(productId), eq(quantity), any(BigDecimal.class)))
-                .thenReturn(expectedOrderItem);
+        when(orderRepository.addItem(eq(orderItemToCreate))).thenReturn(expectedOrderItem);
 
         var orderItem = orderService.addItem(purchaseOrderId, productId, quantity);
 
@@ -65,34 +51,21 @@ class NonFunctionalOrderServiceTest {
 
     @Test
     void addItemWithDiscount() {
-        // Arrange
         var purchaseOrderId = 1L;
         var productId = 1L;
         var quantity = 11;
         var productPrice = new BigDecimal("3.44");
         var calculatedPrice = new BigDecimal("3.096"); // 10% discount
 
-        var product = new ProductRecord();
-        product.setId(productId);
-        product.setPrice(productPrice);
-
-        var priceConfig = new ProductPriceConfigurationRecord();
-        priceConfig.setProductId(productId);
-        priceConfig.setMinQuantity(10);
-        priceConfig.setDiscountPercentage(10);
-
-        var expectedOrderItem = new OrderItemRecord();
-        expectedOrderItem.setId(1L);
-        expectedOrderItem.setPurchaseOrderId(purchaseOrderId);
-        expectedOrderItem.setProductId(productId);
-        expectedOrderItem.setQuantity(quantity);
-        expectedOrderItem.setPrice(calculatedPrice);
+        var product = new ProductRecord(productId, "", productPrice);
+        var priceConfig = new ProductPriceConfigurationRecord(1L, 10, 10, productId);
+        var orderItemToCreate = new OrderItemRecord(null, quantity, calculatedPrice, purchaseOrderId, productId);
+        var expectedOrderItem = new OrderItemRecord(1L, quantity, calculatedPrice, purchaseOrderId, productId);
 
         when(orderRepository.purchaseOrderExists(purchaseOrderId)).thenReturn(true);
         when(productRepository.findProduct(productId)).thenReturn(Optional.of(product));
         when(productRepository.findProductPriceConfiguration(productId)).thenReturn(Optional.of(priceConfig));
-        when(orderRepository.addItem(eq(purchaseOrderId), eq(productId), eq(quantity), any(BigDecimal.class)))
-                .thenReturn(expectedOrderItem);
+        when(orderRepository.addItem(eq(orderItemToCreate))).thenReturn(expectedOrderItem);
 
         var orderItem = orderService.addItem(purchaseOrderId, productId, quantity);
 

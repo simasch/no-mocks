@@ -37,7 +37,7 @@ public class OrderService {
                                 priceConfiguration.getDiscountPercentage()))
                 .orElse(product.getPrice());
 
-        return orderRepository.addItem(purchaseOrderId, productId, quantity, calculatedPrice);
+        return orderRepository.addItem(new OrderItemRecord(null, quantity, calculatedPrice, purchaseOrderId, productId));
     }
 
     @Transactional

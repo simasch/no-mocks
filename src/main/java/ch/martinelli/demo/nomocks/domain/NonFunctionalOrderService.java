@@ -48,7 +48,12 @@ public class NonFunctionalOrderService {
                 })
                 .orElse(product.getPrice());
 
-        return orderRepository.addItem(purchaseOrderId, productId, quantity, calculatedPrice);
+        var orderItem = new OrderItemRecord(null, quantity, calculatedPrice, purchaseOrderId, productId);
+
+        var savedOrderItem = orderRepository.addItem(orderItem);
+
+        orderItem.setId(savedOrderItem.getId());
+        return orderItem;
     }
 
     @Transactional
