@@ -51,7 +51,7 @@ public class NonFunctionalOrderService {
         var orderItem = new OrderItemRecord(null, quantity, calculatedPrice, purchaseOrderId, productId);
 
         var savedOrderItem = orderRepository.addItem(orderItem);
-
+        // This is a hack, otherwise the test would only test the mock objects
         orderItem.setId(savedOrderItem.getId());
         return orderItem;
     }
