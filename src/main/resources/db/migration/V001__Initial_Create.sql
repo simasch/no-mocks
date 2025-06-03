@@ -16,7 +16,7 @@ CREATE TABLE product
 (
     id    BIGINT  NOT NULL DEFAULT nextval('product_seq') PRIMARY KEY,
     name  VARCHAR NOT NULL,
-    price DOUBLE PRECISION
+    price DECIMAL(5, 2)
 );
 
 CREATE SEQUENCE purchase_order_seq START WITH 100000 INCREMENT BY 50;
@@ -38,6 +38,7 @@ CREATE TABLE order_item
 (
     id                BIGINT NOT NULL DEFAULT nextval('order_item_seq') PRIMARY KEY,
     quantity          INT    NOT NULL,
+    price             DECIMAL(5, 2),
 
     purchase_order_id BIGINT NOT NULL REFERENCES purchase_order (id),
     product_id        BIGINT NOT NULL REFERENCES product (id)

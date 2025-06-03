@@ -17,6 +17,7 @@ import static ch.martinelli.demo.nomocks.db.tables.PurchaseOrder.PURCHASE_ORDER;
 class OrderService {
 
     private final DSLContext ctx;
+    private final PriceCalculator priceCalculator = new PriceCalculator();
 
     OrderService(DSLContext ctx) {
         this.ctx = ctx;
@@ -45,14 +46,19 @@ class OrderService {
             throw new IllegalArgumentException("Purchase order does not exist");
         }
 
-        if (!ctx.fetchExists(ctx.selectFrom(PRODUCT).where(PRODUCT.ID.eq(productId)))) {
-            throw new IllegalArgumentException("Product does not exist");
-        }
+        var product = ctx
+                .selectFrom(PRODUCT)
+                .where(PRODUCT.ID.eq(productId))
+                .fetchOptional()
+                .orElseThrow(() -> new IllegalArgumentException("Product does not exist"));
+
+        var calculatedPrice = priceCalculator.calculatePrice(product.getPrice(), quantity);
 
         var orderItem = ctx.newRecord(ORDER_ITEM);
         orderItem.setPurchaseOrderId(purchaseOrderId);
         orderItem.setProductId(productId);
         orderItem.setQuantity(quantity);
+        orderItem.setPrice(calculatedPrice);
         orderItem.store();
 
         return orderItem;

@@ -1,4 +1,6 @@
 package ch.martinelli.demo.nomocks.query;
 
-record Product(Long id, String name, double price) {
+import java.math.BigDecimal;
+
+record Product(Long id, String name, BigDecimal price) {
 }
