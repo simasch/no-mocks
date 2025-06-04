@@ -10,8 +10,11 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.StopWatch;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -38,12 +41,12 @@ class OrderCommandHandlerTest {
 
         var createOrderRequest = new HttpEntity<>(createOrderJson, headers);
         var createOrderResponse = restTemplate.postForEntity(
-                "/commands/order", 
-                createOrderRequest, 
+                "/commands/order",
+                createOrderRequest,
                 String.class);
 
-        // Verify response status is OK (200)
-        assert createOrderResponse.getStatusCode().is2xxSuccessful();
+        assertThat(createOrderResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
         var orderId = createOrderResponse.getBody();
 
         stopWatch.stop();
@@ -61,12 +64,12 @@ class OrderCommandHandlerTest {
 
         var addOrderItemRequest = new HttpEntity<>(addOrderItemJson, headers);
         var addOrderItemResponse = restTemplate.postForEntity(
-                "/commands/order", 
-                addOrderItemRequest, 
+                "/commands/order",
+                addOrderItemRequest,
                 String.class);
 
-        // Verify response status is OK (200)
-        assert addOrderItemResponse.getStatusCode().is2xxSuccessful();
+        assertThat(addOrderItemResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
         var orderItemId = addOrderItemResponse.getBody();
 
         var updateQuantityJson = """
@@ -78,12 +81,11 @@ class OrderCommandHandlerTest {
 
         var updateQuantityRequest = new HttpEntity<>(updateQuantityJson, headers);
         var updateQuantityResponse = restTemplate.postForEntity(
-                "/commands/order", 
-                updateQuantityRequest, 
+                "/commands/order",
+                updateQuantityRequest,
                 String.class);
 
-        // Verify response status is OK (200)
-        assert updateQuantityResponse.getStatusCode().is2xxSuccessful();
+        assertThat(updateQuantityResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         stopWatch.stop();
         LOGGER.info("Add order item took {} ms", stopWatch.getTotalTimeMillis());

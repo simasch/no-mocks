@@ -5,32 +5,30 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.StopWatch;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Import(TestcontainersConfiguration.class)
-@SpringBootTest
-@AutoConfigureMockMvc
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class OrderQueryControllerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderQueryControllerTest.class);
 
     @Autowired
-    private MockMvc mockMvc;
+    private TestRestTemplate restTemplate;
 
     @Test
-    void get_orders() throws Exception {
+    void get_orders() {
         var stopWatch = new StopWatch();
         stopWatch.start();
 
-        mockMvc.perform(get("/orders?offset=0&limit=500"))
-                .andExpect(status().isOk());
+        var response = restTemplate.getForEntity("/orders?offset=0&limit=500", Object.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         stopWatch.stop();
         LOGGER.info("Test took {} ms", stopWatch.getTotalTimeMillis());
