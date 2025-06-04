@@ -1,0 +1,10 @@
+insert into purchase_order (id, order_date, customer_id) values (1, '2023-11-14 14:38:40', 1);
+insert into purchase_order (id, order_date, customer_id) values (2, '2023-08-30 09:46:17', 2);
+insert into purchase_order (id, order_date, customer_id) values (3, '2023-10-10 16:04:00', 3);
+insert into purchase_order (id, order_date, customer_id) values (4, '2023-08-29 07:59:32', 4);
+insert into purchase_order (id, order_date, customer_id) values (5, '2023-11-20 04:38:53', 5);
+insert into purchase_order (id, order_date, customer_id) values (6, '2023-10-20 21:58:46', 6);
+insert into purchase_order (id, order_date, customer_id) values (7, '2023-12-28 19:24:02', 7);
+insert into purchase_order (id, order_date, customer_id) values (8, '2023-09-04 21:34:34', 8);
+insert into purchase_order (id, order_date, customer_id) values (9, '2023-04-13 01:00:38', 9);
+insert into purchase_order (id, order_date, customer_id) values (10, '2023-06-22 09:48:56', 10);

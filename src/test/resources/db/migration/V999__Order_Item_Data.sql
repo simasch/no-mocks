@@ -1,0 +1,10 @@
+insert into order_item (id, quantity, product_id, purchase_order_id) values (1, 4, 1, 1);
+insert into order_item (id, quantity, product_id, purchase_order_id) values (2, 8, 2, 2);
+insert into order_item (id, quantity, product_id, purchase_order_id) values (3, 2, 3, 3);
+insert into order_item (id, quantity, product_id, purchase_order_id) values (4, 6, 4, 4);
+insert into order_item (id, quantity, product_id, purchase_order_id) values (5, 2, 5, 5);
+insert into order_item (id, quantity, product_id, purchase_order_id) values (6, 6, 6, 6);
+insert into order_item (id, quantity, product_id, purchase_order_id) values (7, 3, 7, 7);
+insert into order_item (id, quantity, product_id, purchase_order_id) values (8, 5, 8, 8);
+insert into order_item (id, quantity, product_id, purchase_order_id) values (9, 1, 9, 9);
+insert into order_item (id, quantity, product_id, purchase_order_id) values (10, 6, 10, 10);

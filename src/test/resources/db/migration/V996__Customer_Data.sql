@@ -1,0 +1,10 @@
+insert into customer (id, first_name, last_name, street, postal_code, city) values (1, 'Gamaliel', 'Retchless', '4 Oriole Lane', 1000, 'Samoš');
+insert into customer (id, first_name, last_name, street, postal_code, city) values (2, 'Kelci', 'Grinnov', '88889 Lawn Point', 1000, 'Tangguhang');
+insert into customer (id, first_name, last_name, street, postal_code, city) values (3, 'Bunni', 'Suttie', '994 Dawn Point', 1000, 'Zhili');
+insert into customer (id, first_name, last_name, street, postal_code, city) values (4, 'Marline', 'Cogdell', '9856 Vernon Road', 1000, 'Waiwejak');
+insert into customer (id, first_name, last_name, street, postal_code, city) values (5, 'Amata', 'Huncoot', '556 Kedzie Street', 1000, 'Zhongxin');
+insert into customer (id, first_name, last_name, street, postal_code, city) values (6, 'Wyndham', 'Bischop', '60 Moose Drive', '188516', 'Kipen');
+insert into customer (id, first_name, last_name, street, postal_code, city) values (7, 'Constance', 'Attenburrow', '57 Briar Crest Center', 1000, 'Palilula');
+insert into customer (id, first_name, last_name, street, postal_code, city) values (8, 'Odille', 'Needs', '9 Victoria Point', 1000, 'Gayamdesa');
+insert into customer (id, first_name, last_name, street, postal_code, city) values (9, 'Elga', 'Bolzmann', '8985 Melrose Junction', '307505', 'Rudnichnyy');
+insert into customer (id, first_name, last_name, street, postal_code, city) values (10, 'Claudetta', 'Fendley', '854 Bunker Hill Center', '834 33', 'Brunflo');
