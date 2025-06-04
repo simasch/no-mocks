@@ -5,67 +5,85 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.util.StopWatch;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @Import(TestcontainersConfiguration.class)
-@SpringBootTest
-@AutoConfigureMockMvc
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class OrderCommandHandlerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderCommandHandlerTest.class);
 
     @Autowired
-    private MockMvc mockMvc;
+    private TestRestTemplate restTemplate;
 
     @Test
-    void createPurchaseOrderWithOneItem() throws Exception {
+    void create_purchase_order_with_one_item() throws Exception {
         var stopWatch = new StopWatch();
         stopWatch.start();
 
-        var createOrderResult = mockMvc.perform(post("/commands/order")
-                        .contentType(APPLICATION_JSON)
-                        .content("""
-                                {
-                                    "@type": "CreateOrderCommand",
-                                    "customerId":  1
-                                }"""))
-                .andExpect(status().isOk())
-                .andReturn();
+        var headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        var createOrderJson = """
+                {
+                    "@type": "CreateOrderCommand",
+                    "customerId":  1
+                }""";
+
+        var createOrderRequest = new HttpEntity<>(createOrderJson, headers);
+        var createOrderResponse = restTemplate.postForEntity(
+                "/commands/order", 
+                createOrderRequest, 
+                String.class);
+
+        // Verify response status is OK (200)
+        assert createOrderResponse.getStatusCode().is2xxSuccessful();
+        var orderId = createOrderResponse.getBody();
 
         stopWatch.stop();
         LOGGER.info("Create order took {} ms", stopWatch.getTotalTimeMillis());
 
         stopWatch.start();
 
-        var addOrderItemResult = mockMvc.perform(post("/commands/order")
-                        .contentType(APPLICATION_JSON)
-                        .content("""
-                                {
-                                    "@type": "AddOrderItemCommand",
-                                    "orderId": %s,
-                                    "productId": 1,
-                                    "quantity": 1
-                                }""".formatted(createOrderResult.getResponse().getContentAsString())))
-                .andExpect(status().isOk())
-                .andReturn();
+        var addOrderItemJson = """
+                {
+                    "@type": "AddOrderItemCommand",
+                    "orderId": %s,
+                    "productId": 1,
+                    "quantity": 1
+                }""".formatted(orderId);
 
-        mockMvc.perform(post("/commands/order")
-                        .contentType(APPLICATION_JSON)
-                        .content("""
-                                {
-                                    "@type": "UpdateQuantityCommand",
-                                    "orderItemId": %s,
-                                    "quantity": 1
-                                }""".formatted(addOrderItemResult.getResponse().getContentAsString())))
-                .andExpect(status().isOk());
+        var addOrderItemRequest = new HttpEntity<>(addOrderItemJson, headers);
+        var addOrderItemResponse = restTemplate.postForEntity(
+                "/commands/order", 
+                addOrderItemRequest, 
+                String.class);
+
+        // Verify response status is OK (200)
+        assert addOrderItemResponse.getStatusCode().is2xxSuccessful();
+        var orderItemId = addOrderItemResponse.getBody();
+
+        var updateQuantityJson = """
+                {
+                    "@type": "UpdateQuantityCommand",
+                    "orderItemId": %s,
+                    "quantity": 1
+                }""".formatted(orderItemId);
+
+        var updateQuantityRequest = new HttpEntity<>(updateQuantityJson, headers);
+        var updateQuantityResponse = restTemplate.postForEntity(
+                "/commands/order", 
+                updateQuantityRequest, 
+                String.class);
+
+        // Verify response status is OK (200)
+        assert updateQuantityResponse.getStatusCode().is2xxSuccessful();
 
         stopWatch.stop();
         LOGGER.info("Add order item took {} ms", stopWatch.getTotalTimeMillis());

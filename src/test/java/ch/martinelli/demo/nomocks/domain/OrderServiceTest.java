@@ -20,7 +20,7 @@ class OrderServiceTest {
 
     @Test
     @Transactional
-    void addOrderItemWithProduct1() {
+    void add_item_without_discount() {
         var purchaseOrder = orderService.createOrder(1L);
         assertThat(purchaseOrder).isNotNull();
         assertThat(purchaseOrder.getId()).isNotNull();
@@ -33,7 +33,7 @@ class OrderServiceTest {
 
     @Test
     @Transactional
-    void addOrderItemWithProduct1WithDiscount() {
+    void add_item_with_discount() {
         var purchaseOrder = orderService.createOrder(1L);
         assertThat(purchaseOrder).isNotNull();
         assertThat(purchaseOrder.getId()).isNotNull();

@@ -2,6 +2,7 @@ package ch.martinelli.demo.nomocks.query;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -17,7 +18,9 @@ class OrderQueryController {
     }
 
     @GetMapping
-    List<PurchaseOrder> getCustomersWithOrders(FindOrders query) {
-        return orderQueryRepository.findOrders(query.firstName(), query.lastName(), query.offset(), query.limit());
+    List<PurchaseOrder> getCustomersWithOrders(@RequestParam(required = false) String firstName,
+                                               @RequestParam(required = false) String lastName,
+                                               @RequestParam int offset, @RequestParam int limit) {
+        return orderQueryRepository.findOrders(firstName, lastName, offset, limit);
     }
 }

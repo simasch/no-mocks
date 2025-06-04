@@ -36,10 +36,9 @@ public class NonFunctionalOrderService {
         var productPriceConfiguration = productRepository.findProductPriceConfiguration(productId);
         var calculatedPrice = productPriceConfiguration
                 .map(priceConfiguration -> {
-                    if (quantity >= priceConfiguration.getMinQuantity()
-                            && priceConfiguration.getDiscountPercentage() != null) {
-                        var discountFactor = BigDecimal.ONE
-                                .subtract(new BigDecimal(priceConfiguration.getDiscountPercentage())
+                    if (quantity >= priceConfiguration.getMinQuantity()) {
+                        var discountFactor = BigDecimal.ONE.subtract(
+                                new BigDecimal(priceConfiguration.getDiscountPercentage())
                                         .divide(new BigDecimal(100), 3, RoundingMode.HALF_UP));
                         return product.getPrice().multiply(discountFactor).setScale(3, RoundingMode.HALF_UP);
                     } else {

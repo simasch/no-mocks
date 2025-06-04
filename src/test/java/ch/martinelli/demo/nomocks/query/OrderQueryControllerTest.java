@@ -25,11 +25,11 @@ class OrderQueryControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    void getOrders() throws Exception {
+    void get_orders() throws Exception {
         var stopWatch = new StopWatch();
         stopWatch.start();
 
-        mockMvc.perform(get("/orders?firstName=%&lastName=%&offset=0&limit=500"))
+        mockMvc.perform(get("/orders?offset=0&limit=500"))
                 .andExpect(status().isOk());
 
         stopWatch.stop();

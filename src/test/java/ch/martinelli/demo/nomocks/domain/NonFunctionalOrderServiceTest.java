@@ -27,7 +27,7 @@ class NonFunctionalOrderServiceTest {
     private NonFunctionalOrderService orderService;
 
     @Test
-    void addItemWithOutDiscount() {
+    void add_item_without_discount() {
         var purchaseOrderId = 1L;
         var productId = 1L;
         var quantity = 9;
@@ -50,7 +50,7 @@ class NonFunctionalOrderServiceTest {
     }
 
     @Test
-    void addItemWithDiscount() {
+    void add_item_with_discount() {
         var purchaseOrderId = 1L;
         var productId = 1L;
         var quantity = 11;
