@@ -9,15 +9,15 @@ import static ch.martinelli.demo.nomocks.db.tables.Customer.CUSTOMER;
 import static org.jooq.Records.mapping;
 
 @Repository
-public class CustomerRepository {
+class CustomerRepository {
 
     private final DSLContext ctx;
 
-    public CustomerRepository(DSLContext ctx) {
+    CustomerRepository(DSLContext ctx) {
         this.ctx = ctx;
     }
 
-    public Optional<Customer> findCustomer(long customerId) {
+    Optional<Customer> findCustomer(long customerId) {
         return ctx
                 .select(CUSTOMER.ID, CUSTOMER.FIRST_NAME, CUSTOMER.LAST_NAME,
                         CUSTOMER.STREET, CUSTOMER.POSTAL_CODE, CUSTOMER.CITY)

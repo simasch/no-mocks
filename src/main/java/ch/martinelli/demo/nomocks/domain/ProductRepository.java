@@ -21,7 +21,7 @@ class ProductRepository {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Product> findProduct(long productId) {
+    Optional<Product> findProduct(long productId) {
         return ctx
                 .select(PRODUCT.ID, PRODUCT.NAME, PRODUCT.PRICE)
                 .from(PRODUCT)
@@ -29,7 +29,7 @@ class ProductRepository {
                 .fetchOptional(mapping(Product::new));
     }
 
-    public Optional<ProductPriceConfigurationRecord> findProductPriceConfiguration(long productId) {
+    Optional<ProductPriceConfigurationRecord> findProductPriceConfiguration(long productId) {
         return ctx
                 .selectFrom(PRODUCT_PRICE_CONFIGURATION)
                 .where(PRODUCT_PRICE_CONFIGURATION.PRODUCT_ID.eq(productId))

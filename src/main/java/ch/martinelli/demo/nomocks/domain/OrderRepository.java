@@ -33,7 +33,7 @@ class OrderRepository {
     }
 
     @Transactional
-    public OrderItemRecord addItem(long purchaseOrderId, long productId, int quantity, BigDecimal calculatedPrice) {
+    OrderItemRecord addItem(long purchaseOrderId, long productId, int quantity, BigDecimal calculatedPrice) {
         var orderItem = new OrderItemRecord(null, quantity, calculatedPrice, purchaseOrderId, productId);
         ctx.attach(orderItem);
         orderItem.store();
@@ -53,7 +53,7 @@ class OrderRepository {
     }
 
     @Transactional(readOnly = true)
-    public boolean purchaseOrderExists(long purchaseOrderId) {
+    boolean purchaseOrderExists(long purchaseOrderId) {
         return ctx.fetchExists(ctx.selectFrom(PURCHASE_ORDER).where(PURCHASE_ORDER.ID.eq(purchaseOrderId)));
     }
 
