@@ -1,6 +1,5 @@
 package ch.martinelli.demo.nomocks.domain;
 
-import ch.martinelli.demo.nomocks.db.tables.records.PurchaseOrderRecord;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +25,7 @@ public class NonFunctionalOrderService {
         var customer = customerRepository.findCustomer(customerId)
                 .orElseThrow(() -> new IllegalArgumentException("Customer does not exist"));
 
-        PurchaseOrderRecord purchaseOrder = orderRepository.createOrder(customerId);
+        var purchaseOrder = orderRepository.createOrder(customerId);
 
         return new PurchaseOrder(purchaseOrder.getId(), purchaseOrder.getOrderDate(), customer, List.of());
     }
