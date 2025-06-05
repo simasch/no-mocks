@@ -6,9 +6,9 @@ import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import static ch.martinelli.demo.nomocks.db.tables.Customer.CUSTOMER;
 import static ch.martinelli.demo.nomocks.db.tables.OrderItem.ORDER_ITEM;
 import static ch.martinelli.demo.nomocks.db.tables.PurchaseOrder.PURCHASE_ORDER;
 
@@ -23,15 +23,9 @@ class OrderRepository {
 
     @Transactional
     PurchaseOrderRecord createOrder(long customerId) {
-        var customer = ctx
-                .selectFrom(CUSTOMER)
-                .where(CUSTOMER.ID.eq(customerId))
-                .fetchOptional()
-                .orElseThrow(() -> new IllegalArgumentException("Customer does not exist"));
-
         var purchaseOrder = ctx.newRecord(PURCHASE_ORDER);
         purchaseOrder.setOrderDate(LocalDateTime.now());
-        purchaseOrder.setCustomerId(customer.getId());
+        purchaseOrder.setCustomerId(customerId);
 
         purchaseOrder.store();
 
@@ -39,10 +33,10 @@ class OrderRepository {
     }
 
     @Transactional
-    OrderItemRecord addItem(OrderItemRecord orderItem) {
+    public OrderItemRecord addItem(long purchaseOrderId, long productId, int quantity, BigDecimal calculatedPrice) {
+        var orderItem = new OrderItemRecord(null, quantity, calculatedPrice, purchaseOrderId, productId);
         ctx.attach(orderItem);
         orderItem.store();
-
         return orderItem;
     }
 

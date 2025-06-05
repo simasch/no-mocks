@@ -1,8 +1,8 @@
-package ch.martinelli.demo.nomocks.query;
+package ch.martinelli.demo.nomocks.domain;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-record PurchaseOrder(Long id, LocalDateTime orderDate,
+public record PurchaseOrder(Long id, LocalDateTime orderDate,
                      Customer customer, List<OrderItem> items) {
 }

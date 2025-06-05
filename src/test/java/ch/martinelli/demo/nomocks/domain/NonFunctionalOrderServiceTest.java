@@ -2,7 +2,6 @@ package ch.martinelli.demo.nomocks.domain;
 
 import ch.martinelli.demo.nomocks.db.tables.records.OrderItemRecord;
 import ch.martinelli.demo.nomocks.db.tables.records.ProductPriceConfigurationRecord;
-import ch.martinelli.demo.nomocks.db.tables.records.ProductRecord;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,20 +32,19 @@ class NonFunctionalOrderServiceTest {
         var quantity = 9;
         var productPrice = new BigDecimal("3.44");
 
-        var product = new ProductRecord(productId, "", productPrice);
+        var product = new Product(productId, "", productPrice);
         var priceConfig = new ProductPriceConfigurationRecord(1L, 10, 10, productId);
-        var orderItemToCreate = new OrderItemRecord(null, quantity, productPrice, purchaseOrderId, productId);
         var expectedOrderItem = new OrderItemRecord(1L, quantity, productPrice, purchaseOrderId, productId);
 
         when(orderRepository.purchaseOrderExists(purchaseOrderId)).thenReturn(true);
         when(productRepository.findProduct(productId)).thenReturn(Optional.of(product));
         when(productRepository.findProductPriceConfiguration(productId)).thenReturn(Optional.of(priceConfig));
-        when(orderRepository.addItem(eq(orderItemToCreate))).thenReturn(expectedOrderItem);
+        when(orderRepository.addItem(eq(purchaseOrderId), eq(productId), eq(quantity), eq(productPrice))).thenReturn(expectedOrderItem);
 
         var orderItem = orderService.addItem(purchaseOrderId, productId, quantity);
 
         assertThat(orderItem).isNotNull();
-        assertThat(orderItem.getPrice()).isEqualTo(productPrice);
+        assertThat(orderItem.price()).isEqualTo(productPrice);
     }
 
     @Test
@@ -57,19 +55,18 @@ class NonFunctionalOrderServiceTest {
         var productPrice = new BigDecimal("3.44");
         var calculatedPrice = new BigDecimal("3.096"); // 10% discount
 
-        var product = new ProductRecord(productId, "", productPrice);
+        var product = new Product(productId, "", productPrice);
         var priceConfig = new ProductPriceConfigurationRecord(1L, 10, 10, productId);
-        var orderItemToCreate = new OrderItemRecord(null, quantity, calculatedPrice, purchaseOrderId, productId);
         var expectedOrderItem = new OrderItemRecord(1L, quantity, calculatedPrice, purchaseOrderId, productId);
 
         when(orderRepository.purchaseOrderExists(purchaseOrderId)).thenReturn(true);
         when(productRepository.findProduct(productId)).thenReturn(Optional.of(product));
         when(productRepository.findProductPriceConfiguration(productId)).thenReturn(Optional.of(priceConfig));
-        when(orderRepository.addItem(eq(orderItemToCreate))).thenReturn(expectedOrderItem);
+        when(orderRepository.addItem(eq(purchaseOrderId), eq(productId), eq(quantity), eq(calculatedPrice))).thenReturn(expectedOrderItem);
 
         var orderItem = orderService.addItem(purchaseOrderId, productId, quantity);
 
         assertThat(orderItem).isNotNull();
-        assertThat(orderItem.getPrice()).isEqualTo(calculatedPrice);
+        assertThat(orderItem.price()).isEqualTo(calculatedPrice);
     }
 }

@@ -18,9 +18,9 @@ class OrderQueryController {
     }
 
     @GetMapping
-    List<PurchaseOrder> getCustomersWithOrders(@RequestParam(required = false) String firstName,
-                                               @RequestParam(required = false) String lastName,
-                                               @RequestParam int offset, @RequestParam int limit) {
+    List<PurchaseOrderInfo> getCustomersWithOrders(@RequestParam(required = false) String firstName,
+                                                   @RequestParam(required = false) String lastName,
+                                                   @RequestParam int offset, @RequestParam int limit) {
         return orderQueryRepository.findOrders(firstName, lastName, offset, limit);
     }
 }

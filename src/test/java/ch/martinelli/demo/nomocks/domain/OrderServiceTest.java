@@ -23,12 +23,12 @@ class OrderServiceTest {
     void add_item_without_discount() {
         var purchaseOrder = orderService.createOrder(1L);
         assertThat(purchaseOrder).isNotNull();
-        assertThat(purchaseOrder.getId()).isNotNull();
+        assertThat(purchaseOrder.id()).isNotNull();
 
         // Add product 1 with quantity 1 (below the discount threshold)
-        var orderItem = orderService.addItem(purchaseOrder.getId(), 1L, 1);
+        var orderItem = orderService.addItem(purchaseOrder.id(), 1L, 1);
 
-        assertThat(orderItem.getPrice()).isEqualTo(new BigDecimal("24.96"));
+        assertThat(orderItem.price()).isEqualTo(new BigDecimal("24.96"));
     }
 
     @Test
@@ -36,16 +36,16 @@ class OrderServiceTest {
     void add_item_with_discount() {
         var purchaseOrder = orderService.createOrder(1L);
         assertThat(purchaseOrder).isNotNull();
-        assertThat(purchaseOrder.getId()).isNotNull();
+        assertThat(purchaseOrder.id()).isNotNull();
 
         // Add product 1 with quantity 10 (at the discount threshold)
-        var orderItem = orderService.addItem(purchaseOrder.getId(), 1L, 10);
+        var orderItem = orderService.addItem(purchaseOrder.id(), 1L, 10);
 
         // Calculate expected price with 10% discount
         var originalPrice = new BigDecimal("24.96");
         var discountMultiplier = BigDecimal.ONE.subtract(new BigDecimal("0.1"));
         var expectedDiscountedPrice = originalPrice.multiply(discountMultiplier);
 
-        assertThat(orderItem.getPrice()).isEqualTo(expectedDiscountedPrice);
+        assertThat(orderItem.price()).isEqualTo(expectedDiscountedPrice);
     }
 }

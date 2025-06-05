@@ -25,11 +25,11 @@ class OrderCommandHandler {
         switch (orderCommand) {
             case OrderCommand.CreateOrderCommand(long customerId) -> {
                 var purchaseOrder = orderService.createOrder(customerId);
-                return Optional.of(purchaseOrder.getId());
+                return Optional.of(purchaseOrder.id());
             }
             case OrderCommand.AddOrderItemCommand(long orderId, long productId, int quantity) -> {
                 var orderItemRecord = orderService.addItem(orderId, productId, quantity);
-                return Optional.of(orderItemRecord.getId());
+                return Optional.of(orderItemRecord.id());
             }
             case OrderCommand.UpdateQuantityCommand(long orderItemId, int quantity) -> {
                 orderService.updateQuantity(orderItemId, quantity);

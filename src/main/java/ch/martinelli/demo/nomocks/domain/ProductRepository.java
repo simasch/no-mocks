@@ -1,7 +1,6 @@
 package ch.martinelli.demo.nomocks.domain;
 
 import ch.martinelli.demo.nomocks.db.tables.records.ProductPriceConfigurationRecord;
-import ch.martinelli.demo.nomocks.db.tables.records.ProductRecord;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +9,7 @@ import java.util.Optional;
 
 import static ch.martinelli.demo.nomocks.db.tables.Product.PRODUCT;
 import static ch.martinelli.demo.nomocks.db.tables.ProductPriceConfiguration.PRODUCT_PRICE_CONFIGURATION;
+import static org.jooq.Records.mapping;
 
 @Repository
 class ProductRepository {
@@ -21,11 +21,12 @@ class ProductRepository {
     }
 
     @Transactional(readOnly = true)
-    public Optional<ProductRecord> findProduct(long productId) {
+    public Optional<Product> findProduct(long productId) {
         return ctx
-                .selectFrom(PRODUCT)
+                .select(PRODUCT.ID, PRODUCT.NAME, PRODUCT.PRICE)
+                .from(PRODUCT)
                 .where(PRODUCT.ID.eq(productId))
-                .fetchOptional();
+                .fetchOptional(mapping(Product::new));
     }
 
     public Optional<ProductPriceConfigurationRecord> findProductPriceConfiguration(long productId) {
