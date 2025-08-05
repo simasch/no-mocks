@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest
@@ -47,5 +48,27 @@ class OrderServiceTest {
         var expectedDiscountedPrice = originalPrice.multiply(discountMultiplier);
 
         assertThat(orderItem.price()).isEqualTo(expectedDiscountedPrice);
+    }
+
+    @Test
+    @Transactional
+    void add_item_with_non_existing_order() {
+        assertThatThrownBy(() -> orderService.addItem(999L, 1L, 10))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Purchase order does not exist");
+    }
+
+    @Test
+    @Transactional
+    void add_item_with_non_existing_product() {
+        var purchaseOrder = orderService.createOrder(1L);
+        assertThat(purchaseOrder).isNotNull();
+        assertThat(purchaseOrder.id()).isNotNull();
+
+        assertThatThrownBy(() -> {
+            orderService.addItem(purchaseOrder.id(), 199L, 10);
+        })
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Product does not exist");
     }
 }
